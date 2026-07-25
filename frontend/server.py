@@ -2,7 +2,7 @@ import os
 from http.server import SimpleHTTPRequestHandler
 from socketserver import TCPServer
 
-PORT = int(os.environ.get("PORT", 8080))
+PORT = int(os.environ.get("PORT", 8000))
 
 
 class Handler(SimpleHTTPRequestHandler):
