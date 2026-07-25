@@ -234,8 +234,10 @@ git push origin main
 
 ---
 
-## Built by Datawebify
+## Built By
 
-**Agentic AI solutions for professional services firms.**
+**Muhammad Umair** — Agentic AI Specialist and Enterprise Consultant
 
-[datawebify.com](https://datawebify.com) | [github.com/umair801/immigration_ai_receptionist](https://github.com/umair801/immigration_ai_receptionist)
+[Datawebify](https://datawebify.com) | [GitHub](https://github.com/umair801) | [Upwork](https://upwork.com/freelancers/umair801)
+
+This system is Project 9 in a portfolio of 50 enterprise-grade agentic AI systems built for professional services firms.
