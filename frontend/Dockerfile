@@ -5,6 +5,6 @@ WORKDIR /app
 COPY index.html .
 COPY server.py .
 
-EXPOSE 8080
+EXPOSE 8000
 
 CMD ["python", "server.py"]
