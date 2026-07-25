@@ -1,3 +1,5 @@
+import json
+import os
 import structlog
 from datetime import datetime, timedelta, timezone
 from typing import Optional
@@ -25,16 +27,37 @@ class GoogleCalendarClient:
         self.service_account_json: str = settings.google_service_account_json
         self._service = None
 
+    def _load_credentials(self) -> service_account.Credentials:
+        """
+        Load service account credentials.
+
+        Supports two sources, checked in order:
+        1. GOOGLE_SERVICE_ACCOUNT_JSON env var containing the raw JSON
+           (used in production/Railway, avoids committing a secret file).
+        2. A JSON file on disk at settings.google_service_account_json
+           (used for local development).
+        """
+        raw_json = os.environ.get("GOOGLE_SERVICE_ACCOUNT_JSON", "")
+
+        # If the env var itself looks like JSON (starts with "{"), use it directly.
+        if raw_json.strip().startswith("{"):
+            info = json.loads(raw_json)
+            return service_account.Credentials.from_service_account_info(
+                info, scopes=SCOPES
+            )
+
+        # Otherwise, treat it as a file path and read from disk.
+        return service_account.Credentials.from_service_account_file(
+            self.service_account_json, scopes=SCOPES
+        )
+
     def _get_service(self):
         """
         Build and cache the Google Calendar service client.
         Uses a service account so no OAuth flow is needed.
         """
         if self._service is None:
-            credentials = service_account.Credentials.from_service_account_file(
-                self.service_account_json,
-                scopes=SCOPES,
-            )
+            credentials = self._load_credentials()
             self._service = build(
                 "calendar", "v3", credentials=credentials, cache_discovery=False
             )
