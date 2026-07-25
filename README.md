@@ -1,6 +1,6 @@
 # AI Immigration Receptionist and Intake Automation System
 
-**Built by [Datawebify](https://datawebify.com) | [immigration.datawebify.com](https://immigration.datawebify.com) | [GitHub](https://github.com/umair801/immigration_ai_receptionist)**
+**Built by [Datawebify](https://datawebify.com) | [immigration.datawebify.com](https://immigration.datawebify.com) (demo) | [immigration-api.datawebify.com](https://immigration-api.datawebify.com) (API) | [GitHub](https://github.com/umair801/immigration_ai_receptionist)**
 
 A fully autonomous AI receptionist system for immigration law firms. Handles inbound and outbound calls in English and Spanish, qualifies leads through structured intake conversations, books consultations with payment confirmation, transfers calls to paralegals when needed, and logs every interaction into GoHighLevel — without human receptionist involvement.
 
@@ -117,6 +117,11 @@ SMS + Calendar Confirmation
 ## Project Structure
 ```
 immigration_ai_receptionist/
+├── frontend/
+│   ├── index.html
+│   ├── server.py
+│   ├── Dockerfile
+│   └── railway.json
 ├── agents/
 │   ├── call_router_agent.py
 │   ├── intake_agent.py
@@ -209,7 +214,8 @@ python main.py
 | `SUPABASE_SERVICE_KEY` | Supabase service role key |
 | `GOOGLE_CALENDAR_ID` | Google Calendar ID |
 | `GOOGLE_SERVICE_ACCOUNT_JSON` | Path to service account JSON |
-| `BASE_URL` | Public deployment URL |
+| `BASE_URL` | Public backend API URL (immigration-api.datawebify.com) |
+| `FRONTEND_URL` | Public frontend demo URL (immigration.datawebify.com), used for CORS |
 
 ---
 
@@ -225,10 +231,17 @@ call transfer routing, payment confirmation, and CRM sync logic.
 
 ## Deployment
 
-Deployed on Railway via Docker.
-Live at: [immigration.datawebify.com](https://immigration.datawebify.com)
+Deployed on Railway via Docker as two separate services from this one repo:
+
+| Service | Domain | Root directory | Purpose |
+|---|---|---|---|
+| Backend API | [immigration-api.datawebify.com](https://immigration-api.datawebify.com) | `/` (repo root) | FastAPI service, webhooks, `/metrics`, `/docs` |
+| Frontend demo | [immigration.datawebify.com](https://immigration.datawebify.com) | `/frontend` | Client-facing landing page, pulls live KPIs from the API |
+
+The frontend is a static page that calls the backend's `/metrics/` endpoint directly from the browser, so it stays in sync with live data without a separate deploy step. Backend `BASE_URL` and `FRONTEND_URL` env vars keep CORS aligned between the two domains.
+
 ```bash
-# Railway deployment is automatic on push to main
+# Railway deployment is automatic on push to main for both services
 git push origin main
 ```
 

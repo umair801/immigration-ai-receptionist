@@ -81,6 +81,9 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         settings.base_url,
+        settings.base_url.rstrip("/"),
+        settings.frontend_url,
+        settings.frontend_url.rstrip("/"),
         "https://app.retellai.com",
         "https://dashboard.stripe.com",
         "https://app.gohighlevel.com",
@@ -106,11 +109,18 @@ app.include_router(metrics_router)
 
 @app.get("/")
 async def root():
+    """
+    API root. This domain (immigration-api.datawebify.com) is the backend only.
+    The client-facing demo lives at immigration.datawebify.com (frontend_url).
+    Returns JSON status here since this is an API host, not a browsable site;
+    anyone landing here directly is pointed to the frontend and the docs.
+    """
     return {
-        "service": "AI Immigration Receptionist",
+        "service": "AI Immigration Receptionist API",
         "version": "1.0.0",
         "status": "live",
         "timestamp": datetime.utcnow().isoformat(),
+        "frontend": settings.frontend_url,
         "endpoints": {
             "voice_webhook": "/voice/retell-webhook",
             "intake_webhook": "/voice/intake-webhook",

@@ -42,6 +42,7 @@ class Settings(BaseSettings):
     app_port: int = Field(default=8000, env="APP_PORT")
     log_level: str = Field(default="INFO", env="LOG_LEVEL")
     base_url: str = Field(..., env="BASE_URL")
+    frontend_url: str = Field(default="https://immigration.datawebify.com/", env="FRONTEND_URL")
 
     model_config = {"env_file": ".env", "case_sensitive": False}
 
